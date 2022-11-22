@@ -36,15 +36,7 @@ const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
 const decimal = document.querySelector(".decimal");
 const backspace = document.querySelector(".backspace");
-
-
-function toInt(str) {
-    if (str != "") {
-        return parseInt(str);
-    }
-
-    else return str;
-}
+const neg = document.querySelector(".negative");
 
 function result() {
     if (operator == "/" && operands[1] == 0) {
@@ -52,9 +44,13 @@ function result() {
         alert("Can't divide by zero. You don't wanna destroy the universe, do you?");
     }
 
-    else {
+    else if (operands.length == 2) {
         const [a, b] = operands;
         return operate(operator, a, b);
+    }
+
+    else {
+        //do nothing
     }
 }
 function displayText(str) {
@@ -74,7 +70,7 @@ function clearAll() {
 }
 
 function toNum(num) {
-    if (num.includes(".")) {
+    if (num % 1 != 0) {
         return parseFloat(num);
     }
     else return parseInt(num);
@@ -91,6 +87,75 @@ function hasDecimal(num) {
     }
 }
 
+function inputNumber(num) {
+    const currentOperand = operands[currentOperandIndex] || "";
+    operands[currentOperandIndex] = toNum(currentOperand + num);
+
+    displayText(operands[currentOperandIndex])
+}
+
+function inputOperator(opValue) {
+    if (currentOperandIndex < 1 && operands.length != 0) {
+        currentOperandIndex++
+        operator = opValue;
+    }
+
+    else if (currentOperandIndex == 1 && operands.length == 1) {
+        operator = opValue;
+    }
+
+    else {
+        operands[0] = result();
+        operands.splice(1, 1);
+        operator = opValue;
+        displayText(operands[0]);
+        currentOperandIndex = 1;
+    }
+    
+}
+
+function addDecimal() {
+    if (!operands[currentOperandIndex]) {
+        operands[currentOperandIndex] = 0;
+        operands[currentOperandIndex] += ".";
+        displayText(operands[currentOperandIndex]);
+    }
+    
+    if (!hasDecimal(operands[currentOperandIndex])) {
+        operands[currentOperandIndex] += ".";
+        displayText(operands[currentOperandIndex]);
+    }
+    }
+
+function equalsBtn() {
+    if (operands.length == 2) {
+        displayText(result())
+        currentOperandIndex = 0;
+        operands[0] = result();
+        operands.splice(1, 1);
+    }
+}
+
+function removeCharacter() {
+    if (operands.length != 0) {
+        let currentOperandStr = operands[currentOperandIndex].toString() || "";
+        const opLength = currentOperandStr.length;
+        operands[currentOperandIndex] = currentOperandStr.slice(0, opLength - 1);;
+        displayText(operands[currentOperandIndex])
+    }
+}
+
+function changeSign() {
+    if (operands[currentOperandIndex] > 0) {
+        operands[currentOperandIndex] = toNum("-" + operands[currentOperandIndex].toString());
+        displayText(operands[currentOperandIndex]);
+    }
+
+    else if (operands[currentOperandIndex] < 0) {
+        operands[currentOperandIndex] = toNum(operands[currentOperandIndex].toString().replace("-", ""));
+        displayText(operands[currentOperandIndex]);
+    }
+}
 
 
 let currentOperandIndex = 0;
@@ -105,72 +170,57 @@ let operator = null;
 for (i = 0; i < numButtons.length; i++) {
         let numButton = numButtons[i];
         numButton.addEventListener("click", function() {
-                const currentOperand = operands[currentOperandIndex] || "";
-                operands[currentOperandIndex] = toNum(currentOperand + numButton.textContent);
-
-                displayText(operands[currentOperandIndex]);
-        })
-    }     
-    
+            inputNumber(numButton.textContent);
+        })  
+}
 
 
     
 
 
 for (i = 0; i < operatorButtons.length; i++) {
-    let opButton = operatorButtons[i];
-    
+    let opButton = operatorButtons[i];    
     opButton.addEventListener("click", function() {
-        if (currentOperandIndex < 1) {
-            currentOperandIndex++
-            operator = opButton.textContent;
-        }
-
-        else if (currentOperandIndex == 1 && operands.length == 1) {
-            operator = opButton.textContent;
-        }
-
-        else {
-            operands[0] = result();
-            operands.splice(1, 1);
-            operator = opButton.textContent;
-            displayText(operands[0]);
-            currentOperandIndex = 1;
-        }
-        
+        inputOperator(opButton.textContent);
     })
 }
 
-
-decimal.addEventListener("click", function() {    
-    if (!operands[currentOperandIndex]) {
-        operands[currentOperandIndex] = 0;
-        operands[currentOperandIndex] += ".";
-        displayText(operands[currentOperandIndex]);
+document.addEventListener("keydown", function() {
+    if (parseInt(event.key) || event.key == "0") {
+        inputNumber(event.key);
     }
-    
-    if (!hasDecimal(operands[currentOperandIndex])) {
-        operands[currentOperandIndex] += ".";
-        displayText(operands[currentOperandIndex]);
+
+    if (event.key == "/" || event.key == "*" || event.key == "-" || event.key == "+") {
+        inputOperator(event.key);
     }
-    })
 
-equals.addEventListener("click", function() {
-    displayText(result())
-});
-
-clear.addEventListener("click", function() {
-    clearAll();
-});
-
-backspace.addEventListener("click", function() {
-    if (operands.length != 0) {
-        let currentOperandStr = operands[currentOperandIndex].toString() || "";
-        const opLength = currentOperandStr.length;
-        operands[currentOperandIndex] = currentOperandStr.slice(0, opLength - 1);;
-        displayText(operands[currentOperandIndex])
+    if (event.key == "=" || event.key == "Enter") {
+        equalsBtn();
     }
-});
+
+    if (event.key == "Backspace") {
+        removeCharacter();
+    }
+
+    if (event.key == ".") {
+        addDecimal();
+    }
+
+    if (event.key == "Escape") {
+        clearAll();
+    }
+
+})
+
+decimal.addEventListener("click", addDecimal)
+
+equals.addEventListener("click", equalsBtn);
+
+clear.addEventListener("click", clearAll);
+
+backspace.addEventListener("click", removeCharacter);
+
+neg.addEventListener("click", changeSign)
 
 //input first variable v2
 //choose operator, v2 becomes v1, v2 becomes empty

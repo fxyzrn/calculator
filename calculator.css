@@ -1,4 +1,6 @@
 .calc-body {
+    background-color: #70b59a;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,32 +8,123 @@
     width: 400px;
     height: 450px;
 }
-.calc-buttons {
-    display: grid;
-    width: 100%;
-    flex-wrap: 1;
-}
 
 .calc-display {
-    height: 60px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;    
+    font-size: 40px;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #d0d0d0;
+    border-radius: 8px;
+    height: 80px;
     width: 360px;
     margin-top: 15px;
     border: 1px solid black;
 }
 
-
-.calc-buttons-num {
-
-}
-
 .calc-num {
-
+    background-color: #f5f5b9;
 }
 
-.calc-operators {
+.decimal {    
+    background-color: #f5f5b9;
+}
 
+.calc-buttons {
+    display: grid;
+    grid-gap: 1%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding: 20px;
+    width: 100%;
 }
 
 .calc-operator {
-    
+    grid-column: 4 / 5;
+    background-color: #8fc6cb;
+}
+.equals {
+    grid-row: 5 / 6;
+    grid-column: 4 / 5;
+    background-color: #8fc6cb;
+}
+
+.clear {    
+    background-color: #d67676;
+    grid-column: 1 / 2;
+}
+
+.backspace {    
+    background-color: #949494;
+    grid-column: 2 / 3;
+}
+
+.negative {
+    background-color: #949494;
+    grid-column: 3 / 4;
+}
+
+.num0 {
+    grid-column: 1 / 3;
+    grid-row: 5 / 6;
+}
+
+.num1 {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+}
+
+.num2 {
+    grid-column: 2 / 3;
+    grid-row: 4 / 5;
+}
+
+.num4 {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+}
+
+.num5 {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+}
+
+.num6 {
+    grid-row: 3 / 4;
+}
+
+.num7 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.num8 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+
+.multipl {
+    grid-row: 1 / 2;
+}
+
+.division {
+    grid-row: 2 / 3;    
+}
+
+.plus {
+    grid-row: 3 / 4;
+}
+
+.minus {
+    grid-row: 4 / 5;
+}
+
+button {
+    font-size: 25px;
+    font-family: Helvetica, Arial, sans-serif;
+    border-radius: 8px;
 }
